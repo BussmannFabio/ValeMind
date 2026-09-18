@@ -1,7 +1,7 @@
 export const site = {
   name: 'ValeMind',
   url: 'https://valemind.tech',
-  email: 'contato@valemind.com.br',
+  email: 'contatovalemind@gmail.com',
   // Configure an HTTPS endpoint accepting JSON to enable confirmed submissions.
   contactEndpoint: '',
 };

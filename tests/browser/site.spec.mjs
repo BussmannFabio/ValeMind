@@ -44,7 +44,7 @@ test('form validates each step, preserves edits and prepares an honest email han
   await expect(page.locator('#result-title')).toHaveText('Sua mensagem está pronta.');
   await expect(page.locator('#result-description')).toContainText('ainda não foi enviada');
   const href = await page.locator('#email-link').getAttribute('href');
-  expect(href).toContain('mailto:contato@valemind.com.br?');
+  expect(href).toContain('mailto:contatovalemind@gmail.com?');
   expect(decodeURIComponent(href)).toContain('Organizar ou visualizar dados');
   expect(decodeURIComponent(href)).toContain('teste@example.com');
   await page.locator('#edit-message').click();
@@ -122,7 +122,7 @@ test('static content and email remain accessible without JavaScript', async ({ b
   await expect(page.locator('noscript a')).toBeVisible();
   await expect(page.locator('noscript a')).toHaveAttribute(
     'href',
-    'mailto:contato@valemind.com.br',
+    'mailto:contatovalemind@gmail.com',
   );
   await expect(page.locator('#contact-form')).toBeHidden();
   await context.close();

@@ -31,7 +31,7 @@ Referências de direção visual: [Vercel Ship — formas fluidas e interação]
 
 ## Formulário e integração
 
-O formulário anterior apenas simulava sucesso. Agora, sem backend configurado, as três etapas preparam uma mensagem para `contato@valemind.com.br`, endereço já presente no projeto. O visitante precisa confirmar o envio em seu aplicativo de e-mail. Há uma alternativa para copiar o texto. A interface não afirma recebimento nesse modo.
+O formulário anterior apenas simulava sucesso. Agora, sem backend configurado, as três etapas preparam uma mensagem para `contatovalemind@gmail.com`, endereço provisório enquanto o e-mail institucional não está configurado. O visitante precisa confirmar o envio em seu aplicativo de e-mail. Há uma alternativa para copiar o texto. A interface não afirma recebimento nesse modo.
 
 Para envio direto, configure `site.contactEndpoint` em `src/content.mjs` com a URL HTTPS da API e gere novamente as páginas. A API deve aceitar `POST application/json`:
 

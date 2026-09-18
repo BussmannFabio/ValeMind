@@ -48,8 +48,8 @@ test('Home remains focused; technical content and cases remain on internal pages
   const projects = await readFile('projetos/index.html', 'utf8');
   for (const name of ['ValeBot AI', 'GestorWeb', 'AutoSync']) assert.ok(projects.includes(name));
 });
-test('GitHub Pages domain preserved and email is the existing repository address', async () => {
+test('GitHub Pages domain and configured contact email are preserved', async () => {
   assert.equal((await readFile('CNAME', 'utf8')).trim(), 'valemind.tech');
-  assert.equal(site.email, 'contato@valemind.com.br');
+  assert.equal(site.email, 'contatovalemind@gmail.com');
   assert.equal(site.contactEndpoint, '');
 });

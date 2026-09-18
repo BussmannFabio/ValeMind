@@ -1,18 +1,25 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { site, problems, services, technologies, projects } from '../src/content.mjs';
 import { header, footer, button, contactForm, closing, icon, escape } from '../src/components.mjs';
+import { heroVisual } from '../src/hero.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const assetVersion = '2.0.1';
+// Every asset change gets a fresh URL; no manual version bump to forget at deploy.
+const assetHash = createHash('sha256');
+for (const file of ['style.css', 'script.js', 'assets/hero-scene.js']) {
+  assetHash.update(await readFile(resolve(root, file)));
+}
+const assetVersion = assetHash.digest('hex').slice(0, 12);
 const intro = (label, title, text) =>
   `<section class="page-intro container"><span class="eyebrow">${label}</span><h1>${title}<span class="accent">.</span></h1><p>${text}</p></section>`;
 const cta = () =>
   `<section class="internal-cta container"><div><span class="eyebrow">Vamos conversar</span><h2>O próximo projeto pode ser o seu.</h2></div>${button('/contato/#contato', 'Conte seu problema')}</section>`;
 
 function home() {
-  return `<section class="hero container" id="hero"><div class="hero-copy"><span class="eyebrow"><span class="status-dot"></span> Software pensado para o seu negócio</span><h1>Seu problema.<br>Nossa próxima<br><span class="accent">solução.</span></h1><p>Transformamos desafios do seu negócio em soluções digitais simples, eficientes e feitas para a sua realidade.</p><div class="hero-actions">${button('#contato', 'Conte seu problema')}<a class="text-link" href="/sobre/">Conheça a Vale Mind ${icon('arrow')}</a></div><div class="hero-caption"><span class="tiny-line"></span> Do primeiro desafio à solução que faz sentido.</div></div><div class="solution-canvas" role="img" aria-label="De processos manuais, dados espalhados e ferramentas desconectadas a uma solução digital sob medida"><div class="canvas-top"><span>DO DESAFIO À SOLUÇÃO</span><span class="canvas-cross">+</span></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><svg class="connection-lines" viewBox="0 0 500 490" aria-hidden="true"><path d="M80 120H170Q250 120 250 245M410 160H320Q250 160 250 245M100 340H170Q250 340 250 245M250 275V410"/></svg><div class="floating-label label-one">${icon('repeat')} Processos manuais</div><div class="floating-label label-two">${icon('chart')} Dados espalhados</div><div class="floating-label label-three">${icon('link')} Ferramentas desconectadas</div><div class="solution-core"><img src="/assets/logo.png" width="165" height="116" alt=""><span>Conectar. Simplificar.</span></div><div class="solution-output"><span class="output-check">${icon('check')}</span><div><small>FEITO PARA VOCÊ</small><strong>Uma solução sob medida</strong></div></div><div class="canvas-bottom"><span>Inteligência aplicada ao seu dia a dia</span><span>01 — ∞</span></div></div></section><section class="problems-section" id="solucoes"><div class="container"><div class="section-heading"><div><span class="eyebrow">Reconhece algum desses desafios?</span><h2>Onde a tecnologia pode<br>facilitar seu negócio?</h2></div><a class="text-link" href="/solucoes/">Explore nossas soluções ${icon('arrow')}</a></div><div class="problem-grid">${problems.map(([need, title, text, symbol]) => `<a class="problem-item" href="#contato" data-need="${need}"><span class="problem-icon">${icon(symbol)}</span><div><h3>${title}</h3><p>${text}</p></div><span class="problem-arrow">${icon('arrow')}</span></a>`).join('')}</div></div></section>${contactForm()}${closing()}`;
+  return `<section class="hero container" id="hero"><div class="hero-copy"><span class="eyebrow"><span class="status-dot"></span> Software pensado para o seu negócio</span><h1>Seu problema.<br>Nossa próxima<br><span class="accent">solução.</span></h1><p>Transformamos desafios do seu negócio em soluções digitais simples, eficientes e feitas para a sua realidade.</p><div class="hero-actions">${button('#contato', 'Conte seu problema')}<a class="text-link" href="/sobre/">Conheça a Vale Mind ${icon('arrow')}</a></div><div class="hero-caption"><span class="tiny-line"></span> Do primeiro desafio à solução que faz sentido.</div></div>${heroVisual(assetVersion)}</section><section class="problems-section" id="solucoes"><div class="container"><div class="section-heading"><div><span class="eyebrow">Reconhece algum desses desafios?</span><h2>Onde a tecnologia pode<br>facilitar seu negócio?</h2></div><a class="text-link" href="/solucoes/">Explore nossas soluções ${icon('arrow')}</a></div><div class="problem-grid">${problems.map(([need, title, text, symbol]) => `<a class="problem-item" href="#contato" data-need="${need}"><span class="problem-icon">${icon(symbol)}</span><div><h3>${title}</h3><p>${text}</p></div><span class="problem-arrow">${icon('arrow')}</span></a>`).join('')}</div></div></section>${contactForm()}${closing()}`;
 }
 
 function solutions() {

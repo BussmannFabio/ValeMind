@@ -19,9 +19,15 @@ Preview: http://127.0.0.1:4173. O servidor local é apenas para desenvolvimento.
 - `scripts/build.mjs`: páginas e metadados; gera os HTMLs versionados, sitemap e robots.
 - `style.css`: estilos compartilhados, breakpoints e movimento reduzido.
 - `script.js`: navegação mobile, formulário e compatibilidade com âncoras antigas.
+- `assets/hero-scene.js`: escultura de partículas interativa, sem bibliotecas externas; modos Automação, Dados e Integrações.
+- `src/hero.mjs`: visual do hero e SVG estático gerado a partir da mesma geometria da animação.
 - `/solucoes/`, `/sobre/`, `/projetos/`, `/contato/`: páginas reais, compatíveis com acesso direto no Pages.
 
 Depois de editar os arquivos fonte, execute `npm run build` e versione também os HTMLs gerados. O GitHub Pages continua configurado como `main / (root)`; não precisa executar Node no servidor. Preserve `CNAME` e `.nojekyll`. Não é necessário configurar uma SPA ou rewrite.
+
+O build calcula um hash do CSS e dos scripts para versionar automaticamente suas URLs e evitar mistura de versões no cache. A animação do hero é carregada somente na Home, limitada a aproximadamente 30 quadros por segundo e densidade de pixels 2. Ela pausa fora da tela, em abas inativas e pelo controle do visitante. Com movimento reduzido, as trocas de forma são estáticas; sem JavaScript ou Canvas, permanece uma ilustração SVG. Os três modos funcionam com teclado e toque.
+
+Referências de direção visual: [Vercel Ship — formas fluidas e interação](https://vercel.com/blog/designing-and-building-the-vercel-ship-conference-platform), [Linear — interfaces mais calmas](https://linear.app/now/behind-the-latest-design-refresh) e [Stripe — geometria interativa](https://stripe.com/blog/globe). A implementação é original, com as cores da ValeMind e foco em uma interação leve.
 
 ## Formulário e integração
 

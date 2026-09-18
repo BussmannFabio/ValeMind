@@ -5,6 +5,7 @@ import { site, problems, services, technologies, projects } from '../src/content
 import { header, footer, button, contactForm, closing, icon, escape } from '../src/components.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const assetVersion = '2.0.1';
 const intro = (label, title, text) =>
   `<section class="page-intro container"><span class="eyebrow">${label}</span><h1>${title}<span class="accent">.</span></h1><p>${text}</p></section>`;
 const cta = () =>
@@ -91,7 +92,7 @@ const pages = [
 
 function document(path, title, description, body) {
   return `<!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><title>${escape(title)}</title><meta name="description" content="${escape(description)}"><link rel="canonical" href="${site.url}${path}"><meta property="og:locale" content="pt_BR"><meta property="og:site_name" content="ValeMind"><meta property="og:type" content="website"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${site.url}${path}"><meta property="og:image" content="${site.url}/assets/logo.png"><meta property="og:image:alt" content="Logo ValeMind"><meta name="twitter:card" content="summary"><link rel="icon" href="/assets/logo_icon.png" type="image/png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css"><script src="/script.js" defer></script></head><body>${header(path)}<main id="main">${body}</main>${footer()}</body></html>\n`;
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><title>${escape(title)}</title><meta name="description" content="${escape(description)}"><link rel="canonical" href="${site.url}${path}"><meta property="og:locale" content="pt_BR"><meta property="og:site_name" content="ValeMind"><meta property="og:type" content="website"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${site.url}${path}"><meta property="og:image" content="${site.url}/assets/logo.png"><meta property="og:image:alt" content="Logo ValeMind"><meta name="twitter:card" content="summary"><link rel="icon" href="/assets/logo_icon.png?v=${assetVersion}" type="image/png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css?v=${assetVersion}"><script src="/script.js?v=${assetVersion}" defer></script></head><body>${header(path)}<main id="main">${body}</main>${footer()}</body></html>\n`;
 }
 
 for (const [path, title, description, body] of pages) {

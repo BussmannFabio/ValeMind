@@ -29,7 +29,8 @@ for (const file of pages) {
         continue;
       }
       if (!href.startsWith('/')) continue;
-      const [pathname, anchor] = href.split('#');
+      const [pathWithQuery, anchor] = href.split('#');
+      const pathname = pathWithQuery.split('?')[0];
       const target = resolve(`.${pathname.endsWith('/') ? pathname + 'index.html' : pathname}`);
       await access(target);
       if (anchor) assert.ok((await readFile(target, 'utf8')).includes(`id="${anchor}"`));

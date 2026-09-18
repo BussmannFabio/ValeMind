@@ -1,219 +1,259 @@
-/* ==========================================================================
-   VALEMIND SOFTWARE SOLUTIONS - INTERACTIVE JAVASCRIPT
-   Unified Estimator & Contact Form with Professional, Human & Clear Messages
-   ========================================================================== */
-
-document.addEventListener('DOMContentLoaded', () => {
-    initHeader();
-    initMobileMenu();
-    initProjectEstimator();
-    initScrollAnimations();
-});
-
-/* ==========================================================================
-   HEADER & STICKY NAVBAR
-   ========================================================================== */
-function initHeader() {
-    const header = document.getElementById('header');
-    if (!header) return;
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-}
-
-/* ==========================================================================
-   MOBILE MENU TOGGLE
-   ========================================================================== */
-function initMobileMenu() {
-    const menuToggle = document.getElementById('menu-toggle');
-    const navMenu = document.getElementById('nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    if (!menuToggle || !navMenu) return;
-
-    menuToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-        const icon = menuToggle.querySelector('i');
-        if (icon) {
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-xmark');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            const icon = menuToggle.querySelector('i');
-            if (icon) {
-                icon.classList.add('fa-bars');
-                icon.classList.remove('fa-xmark');
-            }
-        });
-    });
-}
-
-/* ==========================================================================
-   UNIFIED PROJECT ESTIMATOR & CONTACT FORM (HUMAN & PROFESSIONAL FLOW)
-   ========================================================================== */
-function initProjectEstimator() {
-    const estimatorForm = document.getElementById('estimator-form');
-    const projectTypeInputs = document.querySelectorAll('input[name="projectType"]');
-    const featureCheckboxes = document.querySelectorAll('#feature-options input[type="checkbox"]');
-    const timeDisplay = document.getElementById('estimated-time');
-    const sendEstimateBtn = document.getElementById('send-estimate-btn');
-    const estimatorStatus = document.getElementById('estimator-status');
-
-    // Contact Inputs
-    const estName = document.getElementById('est-name');
-    const estPhone = document.getElementById('est-phone');
-    const estEmail = document.getElementById('est-email');
-    const estCompany = document.getElementById('est-company');
-    const estMessage = document.getElementById('est-message');
-
-    if (!timeDisplay || !estimatorForm) return;
-
-    // Realistic Conservative Time Matrix (Weeks)
-    const projectTypes = {
-        webapp: { timeWeeks: [4, 8], label: 'Web App / Sistema Interno' },
-        chatbot: { timeWeeks: [3, 6], label: 'Chatbot de IA / WhatsApp' },
-        automation: { timeWeeks: [2, 5], label: 'Automação de Processos' },
-        landing: { timeWeeks: [2, 4], label: 'Site Institucional / Landing Page' }
-    };
-
-    const featureAddons = {
-        whatsapp_api: { timeAdd: 1.5, label: 'Integração WhatsApp API / Webhooks' },
-        auth_users: { timeAdd: 1.0, label: 'Autenticação & Controle de Acesso' },
-        ai_llm: { timeAdd: 2.0, label: 'Inteligência Artificial (ChatGPT API)' },
-        database_prisma: { timeAdd: 1.5, label: 'Banco de Dados (PostgreSQL + Prisma)' },
-        admin_panel: { timeAdd: 2.0, label: 'Painel Administrativo para Equipe' },
-        email_notifications: { timeAdd: 1.0, label: 'Notificações Automáticas E-mail/SMS' }
-    };
-
-    function calculateEstimate() {
-        // Selected Solution Type
-        let selectedTypeKey = 'webapp';
-        projectTypeInputs.forEach(input => {
-            const card = input.closest('.option-card');
-            if (input.checked) {
-                selectedTypeKey = input.value;
-                if (card) card.classList.add('active');
-            } else {
-                if (card) card.classList.remove('active');
-            }
-        });
-
-        const typeInfo = projectTypes[selectedTypeKey] || projectTypes.webapp;
-        let minWeeks = typeInfo.timeWeeks[0];
-        let maxWeeks = typeInfo.timeWeeks[1];
-        let selectedFeatures = [];
-
-        // Checkbox Features
-        featureCheckboxes.forEach(cb => {
-            const addon = featureAddons[cb.value];
-            if (cb.checked && addon) {
-                minWeeks += addon.timeAdd;
-                maxWeeks += addon.timeAdd;
-                selectedFeatures.push(addon.label);
-            }
-        });
-
-        const finalMinWeeks = Math.round(minWeeks);
-        const finalMaxWeeks = Math.round(maxWeeks);
-        const timeText = `${finalMinWeeks} a ${finalMaxWeeks} semanas`;
-
-        // Update UI
-        timeDisplay.textContent = timeText;
-
-        return {
-            typeLabel: typeInfo.label,
-            features: selectedFeatures,
-            time: timeText
-        };
+/* Shared progressive enhancement. No credentials or personal data persisted. */
+document.documentElement.classList.add('js');
+const menuToggle = document.querySelector('.menu-toggle');
+const navigation = document.querySelector('#navigation');
+if (menuToggle && navigation) {
+  menuToggle.hidden = false;
+  const closeMenu = () => {
+    navigation.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  };
+  menuToggle.addEventListener('click', () => {
+    const open = navigation.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', String(open));
+  });
+  navigation.addEventListener('click', (event) => {
+    if (event.target.closest('a')) closeMenu();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && navigation.classList.contains('open')) {
+      closeMenu();
+      menuToggle.focus();
     }
-
-    // Attach Event Listeners for dynamic timeline updates
-    projectTypeInputs.forEach(input => input.addEventListener('change', calculateEstimate));
-    featureCheckboxes.forEach(cb => cb.addEventListener('change', calculateEstimate));
-
-    // Handle Form Submission with Validation
-    estimatorForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const nameVal = estName ? estName.value.trim() : '';
-        const phoneVal = estPhone ? estPhone.value.trim() : '';
-        const emailVal = estEmail ? estEmail.value.trim() : '';
-        const companyVal = estCompany ? estCompany.value.trim() : 'Não informada';
-        const msgVal = estMessage ? estMessage.value.trim() : 'Sem observações adicionais';
-
-        // Validate mandatory contact fields
-        if (!nameVal || !phoneVal || !emailVal) {
-            if (estimatorStatus) {
-                estimatorStatus.className = 'estimator-status error';
-                estimatorStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Por favor, preencha seu Nome Completo, WhatsApp e E-mail para enviarmos a análise.';
-            }
-            return;
-        }
-
-        const estimate = calculateEstimate();
-
-        if (sendEstimateBtn) {
-            sendEstimateBtn.disabled = true;
-            sendEstimateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando simulação...';
-        }
-
-        setTimeout(() => {
-            if (sendEstimateBtn) {
-                sendEstimateBtn.disabled = false;
-                sendEstimateBtn.innerHTML = '<i class="fa-solid fa-check"></i> Simulação Enviada!';
-            }
-
-            if (estimatorStatus) {
-                estimatorStatus.className = 'estimator-status success';
-                estimatorStatus.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>Obrigado, ${nameVal}!</strong> Recebemos sua proposta de projeto (${estimate.typeLabel} - estimado em ${estimate.time}). Nossa equipe técnica analisará as necessidades e responderá pelo WhatsApp (${phoneVal}) ou E-mail (${emailVal}) o quanto antes!`;
-            }
-
-            estimatorForm.reset();
-            calculateEstimate();
-
-            setTimeout(() => {
-                if (sendEstimateBtn) {
-                    sendEstimateBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Simulação para Análise';
-                }
-            }, 6000);
-        }, 1200);
-    });
-
-    // Initial Run
-    calculateEstimate();
+  });
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('.site-header')) closeMenu();
+  });
+  matchMedia('(min-width:1000px)').addEventListener('change', closeMenu);
 }
 
-/* ==========================================================================
-   SCROLL ANIMATIONS & INTERSECTION OBSERVER
-   ========================================================================== */
-function initScrollAnimations() {
-    const animateElements = document.querySelectorAll('.glass-card, .section-header, .diff-item, .tech-card');
+// Preserve links to sections of the previous landing page.
+if (location.pathname === '/' || location.pathname === '/index.html') {
+  const legacy = {
+    '#diferenciais': '/sobre/#diferenciais',
+    '#tecnologias': '/solucoes/#tecnologias',
+    '#portfolio': '/projetos/#portfolio',
+    '#estimador': '/#contato',
+  };
+  const redirectLegacy = () => {
+    if (legacy[location.hash]) location.replace(legacy[location.hash]);
+  };
+  redirectLegacy();
+  window.addEventListener('hashchange', redirectLegacy);
+}
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
-            }
-        });
-    }, {
-        threshold: 0.1
-    });
+const form = document.querySelector('#contact-form');
+if (form) {
+  const steps = [...form.querySelectorAll('[data-step]')];
+  const error = document.querySelector('#form-error');
+  const back = form.querySelector('.back-button');
+  const next = form.querySelector('.next-button');
+  const result = document.querySelector('#form-result');
+  const names = ['Sua necessidade', 'Seu desafio', 'Seu contato'];
+  let step = 0;
+  let pending = false;
 
-    animateElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        observer.observe(el);
+  function showStep(index, focus = true) {
+    step = index;
+    steps.forEach((element, i) => {
+      element.hidden = i !== index;
+      element.classList.toggle('step-enter', i === index);
     });
+    document.querySelector('#step-count').textContent = `Etapa ${index + 1} de 3`;
+    document.querySelector('.step-name').textContent = names[index];
+    document.querySelector('.progress-track span').style.width = `${((index + 1) / 3) * 100}%`;
+    back.hidden = index === 0;
+    next.textContent = index === 2 ? 'Enviar meu problema →' : 'Continuar →';
+    error.textContent = '';
+    if (focus) {
+      const heading = steps[index].querySelector('legend');
+      heading.focus({ preventScroll: true });
+      heading.scrollIntoView({ behavior: 'instant', block: 'nearest' });
+    }
+  }
+
+  function fail(message, field) {
+    error.textContent = message;
+    if (field) {
+      field.setAttribute('aria-invalid', 'true');
+      field.focus();
+    }
+    return false;
+  }
+
+  function validate(index) {
+    if (index === 0 && !form.querySelector('[name=need]:checked'))
+      return fail(
+        'Escolha uma opção para continuar. Se estiver em dúvida, selecione “Ainda não sei exatamente”.',
+        form.querySelector('[name=need]'),
+      );
+    if (index === 1 && form.elements.problem.value.trim().length < 15)
+      return fail(
+        'Conte um pouco mais sobre o problema (pelo menos 15 caracteres).',
+        form.elements.problem,
+      );
+    if (index === 2) {
+      if (form.elements.name.value.trim().length < 2)
+        return fail('Informe seu nome para sabermos com quem falar.', form.elements.name);
+      const digits = form.elements.phone.value.replace(/\D/g, '');
+      if (digits.length < 10 || digits.length > 15)
+        return fail(
+          'Informe um telefone válido com DDD, como (11) 99999-9999.',
+          form.elements.phone,
+        );
+    }
+    for (const field of steps[index].querySelectorAll('input, textarea')) {
+      if (!field.checkValidity())
+        return fail(
+          field.type === 'email'
+            ? 'Confira seu e-mail, por exemplo: voce@empresa.com.'
+            : 'Confira este campo para continuar.',
+          field,
+        );
+    }
+    return true;
+  }
+
+  form.addEventListener('input', (event) => {
+    event.target.removeAttribute('aria-invalid');
+    if (event.target.name === 'need') {
+      form
+        .querySelectorAll('[name=need]')
+        .forEach((input) => input.removeAttribute('aria-invalid'));
+    }
+    error.textContent = '';
+  });
+  back.addEventListener('click', () => {
+    if (!pending) showStep(Math.max(0, step - 1));
+  });
+  document.querySelectorAll('[data-need]').forEach((link) =>
+    link.addEventListener('click', () => {
+      if (pending) return;
+      form.hidden = false;
+      result.hidden = true;
+      const input = form.querySelector(`[name=need][value="${link.dataset.need}"]`);
+      if (input) {
+        input.checked = true;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      showStep(0, false);
+    }),
+  );
+
+  function getPayload() {
+    const values = Object.fromEntries(new FormData(form));
+    return {
+      ...Object.fromEntries(Object.entries(values).map(([key, value]) => [key, value.trim()])),
+      needLabel: form.querySelector('[name=need]:checked').nextElementSibling.textContent,
+      source: location.pathname,
+    };
+  }
+
+  function showResult(title, description, emailMode) {
+    document.querySelector('#result-title').textContent = title;
+    document.querySelector('#result-description').textContent = description;
+    document.querySelector('#email-handoff').hidden = !emailMode;
+    document.querySelector('#edit-message').textContent = emailMode
+      ? 'Editar minhas respostas'
+      : 'Enviar outra mensagem';
+    document.querySelector('#edit-message').dataset.sent = emailMode ? 'false' : 'true';
+    form.hidden = true;
+    result.hidden = false;
+    result.focus();
+  }
+
+  function prepareEmail(payload) {
+    const body = `Olá, Vale Mind!\n\nGostaria de: ${payload.needLabel}\n\n${payload.problem}\n\nNome: ${payload.name}\nEmpresa: ${payload.company || 'Não informada'}\nTelefone: ${payload.phone}\nE-mail: ${payload.email}`;
+    document.querySelector('#email-link').href =
+      `mailto:${form.dataset.email}?subject=${encodeURIComponent('Vamos conversar sobre meu problema')}&body=${encodeURIComponent(body)}`;
+    document.querySelector('#message-copy').value = body;
+    showResult(
+      'Sua mensagem está pronta.',
+      'Abra seu aplicativo de e-mail e confirme o envio para a Vale Mind. Sua mensagem ainda não foi enviada.',
+      true,
+    );
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (pending || !validate(step)) return;
+    if (step < 2) {
+      showStep(step + 1);
+      return;
+    }
+    for (let i = 0; i < steps.length; i++) {
+      showStep(i, false);
+      if (!validate(i)) return;
+    }
+    const payload = getPayload();
+    if (!form.dataset.endpoint) {
+      prepareEmail(payload);
+      return;
+    }
+    pending = true;
+    next.disabled = true;
+    back.disabled = true;
+    next.textContent = 'Enviando…';
+    form.setAttribute('aria-busy', 'true');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const endpoint = new URL(form.dataset.endpoint, location.origin);
+      if (endpoint.protocol !== 'https:' && endpoint.origin !== location.origin)
+        throw new Error('Insecure endpoint');
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+        credentials: 'omit',
+      });
+      if (!response.ok) throw new Error('Delivery failed');
+      const confirmation = await response.json();
+      if (confirmation.success !== true) throw new Error('Delivery not confirmed');
+      showResult(
+        'Recebemos sua mensagem!',
+        'Agora é com a gente. Vamos analisar o que você contou e entraremos em contato.',
+        false,
+      );
+      form.reset();
+    } catch {
+      error.textContent =
+        'Não foi possível confirmar o envio. Suas respostas foram mantidas. Tente novamente ou envie sua mensagem por e-mail.';
+      const fallback = document.createElement('button');
+      fallback.type = 'button';
+      fallback.className = 'text-link';
+      fallback.textContent = 'Preparar e-mail';
+      fallback.addEventListener('click', () => prepareEmail(getPayload()));
+      error.append(document.createElement('br'), fallback);
+    } finally {
+      clearTimeout(timeout);
+      pending = false;
+      next.disabled = false;
+      back.disabled = false;
+      next.textContent = 'Enviar meu problema →';
+      form.removeAttribute('aria-busy');
+    }
+  });
+
+  document.querySelector('#edit-message').addEventListener('click', (event) => {
+    result.hidden = true;
+    form.hidden = false;
+    document.querySelector('#copy-status').textContent = '';
+    showStep(event.currentTarget.dataset.sent === 'true' ? 0 : 2);
+  });
+  document.querySelector('#copy-message').addEventListener('click', async () => {
+    const text = document.querySelector('#message-copy');
+    try {
+      await navigator.clipboard.writeText(text.value);
+      document.querySelector('#copy-status').textContent =
+        'Mensagem copiada. Cole no seu e-mail para enviar.';
+    } catch {
+      text.focus();
+      text.select();
+      document.querySelector('#copy-status').textContent =
+        'Selecione e copie o texto acima para enviar pelo seu e-mail.';
+    }
+  });
+  showStep(0, false);
 }

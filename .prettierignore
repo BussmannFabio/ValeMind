@@ -1,0 +1,12 @@
+node_modules
+artifacts
+test-results
+playwright-report
+package-lock.json
+index.html
+404.html
+solucoes/index.html
+sobre/index.html
+projetos/index.html
+contato/index.html
+sitemap.xml

@@ -2,6 +2,7 @@ export const site = {
   name: 'ValeMind',
   url: 'https://valemind.tech',
   email: 'contatovalemind@gmail.com',
+  instagram: 'https://www.instagram.com/valemind.tech/',
   // Configure an HTTPS endpoint accepting JSON to enable confirmed submissions.
   contactEndpoint: '',
 };

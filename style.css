@@ -873,6 +873,15 @@ noscript p {
 .footer-top nav a {
   padding-block: 10px;
 }
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.footer-social .icon {
+  width: 17px;
+  height: 17px;
+}
 .footer-email {
   display: flex;
   align-items: center;

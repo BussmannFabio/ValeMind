@@ -20,6 +20,8 @@ const paths = {
     '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/>',
   check: '<path d="m5 12 4 4L19 6"/>',
   mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/>',
+  instagram:
+    '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>',
 };
 export const icon = (name) =>
   `<svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.arrow}</svg>`;
@@ -45,7 +47,7 @@ export function footer() {
     .map(([href, label]) => `<a href="${href}">${label}</a>`)
     .join(
       '',
-    )}</nav><a class="footer-email" href="mailto:${site.email}">${site.email}${icon('arrow')}</a></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ValeMind. Todos os direitos reservados.</span><span>Atendimento remoto em todo o Brasil ${icon('globe')}</span></div></div></footer>`;
+    )}<a class="footer-social" href="${site.instagram}">${icon('instagram')}<span>Instagram</span></a></nav><a class="footer-email" href="mailto:${site.email}">${site.email}${icon('arrow')}</a></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ValeMind. Todos os direitos reservados.</span><span>Atendimento remoto em todo o Brasil ${icon('globe')}</span></div></div></footer>`;
 }
 
 export function contactForm() {
